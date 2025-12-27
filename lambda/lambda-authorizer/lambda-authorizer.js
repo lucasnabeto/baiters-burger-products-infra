@@ -1,9 +1,6 @@
 const { CognitoJwtVerifier } = require("aws-jwt-verify");
 
-const APP_CLIENT_IDS = [
-    process.env.COGNITO_APP_CLIENT_ID_LOGIN,
-    process.env.COGNITO_APP_CLIENT_ID_MACHINE,
-];
+const APP_CLIENT_IDS = [process.env.COGNITO_APP_CLIENT_ID_MACHINE];
 
 const cognitoVerifier = CognitoJwtVerifier.create({
     userPoolId: process.env.COGNITO_USER_POOL_ID,
@@ -30,10 +27,7 @@ const generatePolicy = (principalId, effect, resource) => {
 };
 
 exports.handler = async (event) => {
-    console.log(
-        "Authorizer event received:",
-        JSON.stringify(event, null, 2)
-    );
+    console.log("Authorizer event received:", JSON.stringify(event, null, 2));
 
     const token = event.authorizationToken;
     if (!token) {

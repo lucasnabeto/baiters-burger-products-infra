@@ -1,12 +1,12 @@
 resource "aws_db_subnet_group" "default" {
   name       = "rds-subnet-group"
-  subnet_ids = data.aws_subnets.nets.ids
+  subnet_ids = var.subnets
 }
 
 resource "aws_security_group" "rds_public" {
   name        = "rds-public-sg"
   description = "Allow public access to RDS"
-  vpc_id      = data.aws_vpc.vpc_default.id
+  vpc_id      = var.vpc_default
 
   ingress {
     from_port   = 3306
