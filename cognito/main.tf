@@ -18,7 +18,7 @@ resource "aws_cognito_resource_server" "resource_server" {
   user_pool_id = aws_cognito_user_pool.user_pool_configuration.id
 
   scope {
-    scope_name        = "crud-products"
+    scope_name        = "crud"
     scope_description = "Permission to crud-products operations"
   }
 }
@@ -31,6 +31,11 @@ resource "aws_cognito_user_pool_client" "machine_client" {
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["client_credentials"]
   allowed_oauth_scopes = [
-    "${aws_cognito_resource_server.resource_server.identifier}/crud-products",
+    "${aws_cognito_resource_server.resource_server.identifier}/crud",
   ]
+}
+
+resource "aws_cognito_user_pool_domain" "this" {
+  domain       = "baitersburger-products-app"
+  user_pool_id = aws_cognito_user_pool.user_pool_configuration.id
 }
