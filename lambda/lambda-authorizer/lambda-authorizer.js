@@ -12,17 +12,18 @@ const generatePolicy = (principalId, effect, resource) => {
     const authResponse = {};
     authResponse.principalId = principalId;
     if (effect && resource) {
-        const policyDocument = {};
-        policyDocument.Version = "2012-10-17";
-        policyDocument.Statement = [];
-        const statementOne = {};
-        statementOne.Action = "execute-api:Invoke";
-        statementOne.Effect = effect;
-        statementOne.Resource = resource;
-        policyDocument.Statement[0] = statementOne;
+        const policyDocument = {
+            Version: "2012-10-17",
+            Statement: [
+                {
+                    Action: "execute-api:Invoke",
+                    Effect: effect,
+                    Resource: resource,
+                },
+            ],
+        };
         authResponse.policyDocument = policyDocument;
     }
-
     return authResponse;
 };
 
@@ -48,10 +49,19 @@ exports.handler = async (event) => {
         const payload = await cognitoVerifier.verify(jwt);
         console.log("Token is valid. Payload:", payload);
 
+        const tmp = event.methodArn.split(":");
+        const apiGatewayArnPart = tmp[5].split("/");
+        const region = tmp[3];
+        const awsAccountId = tmp[4];
+        const apiId = apiGatewayArnPart[0];
+        const stage = apiGatewayArnPart[1];
+
+        const wildcardResource = `arn:aws:execute-api:${region}:${awsAccountId}:${apiId}/${stage}/*/*`;
+
         return generatePolicy(
             payload.sub || payload.client_id,
             "Allow",
-            event.methodArn
+            wildcardResource
         );
     } catch (err) {
         console.error("Invalid token:", err);
