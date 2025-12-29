@@ -7,7 +7,7 @@ resource "aws_lb" "baitersburger_products_alb" {
 
 resource "aws_lb_listener" "baitersburger_products_alb_listener" {
   load_balancer_arn = aws_lb.baitersburger_products_alb.arn
-  port              = 8080
+  port              = 80
   protocol          = "HTTP"
 
   default_action {
@@ -22,6 +22,17 @@ resource "aws_lb_target_group" "baitersburger_products_alb_tg" {
   protocol    = "HTTP"
   vpc_id      = var.vpc_default
   target_type = "ip"
+
+  health_check {
+    path                = "/actuator/health"
+    port                = 8080
+    protocol            = "HTTP"
+    matcher             = "200"
+    interval            = 30
+    timeout             = 5
+    healthy_threshold   = 2
+    unhealthy_threshold = 2
+  }
 }
 
 resource "aws_security_group" "alb_sg" {
@@ -34,8 +45,8 @@ resource "aws_vpc_security_group_ingress_rule" "alb_http_in" {
   description = "HTTP from internet"
   security_group_id = aws_security_group.alb_sg.id
   cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 8080
-  to_port           = 8080
+  from_port         = 80
+  to_port           = 80
   ip_protocol       = "tcp"
 }
 
