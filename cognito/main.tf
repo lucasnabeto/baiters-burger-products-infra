@@ -33,6 +33,15 @@ resource "aws_cognito_user_pool_client" "machine_client" {
   allowed_oauth_scopes = [
     "${aws_cognito_resource_server.resource_server.identifier}/crud",
   ]
+
+  access_token_validity = 60
+  id_token_validity = 60
+  refresh_token_validity = 30
+  token_validity_units {
+    access_token = "minutes"
+    id_token = "minutes"
+    refresh_token = "days"
+  }
 }
 
 resource "aws_cognito_user_pool_domain" "this" {
