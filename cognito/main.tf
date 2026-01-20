@@ -45,6 +45,6 @@ resource "aws_cognito_user_pool_client" "machine_client" {
 }
 
 resource "aws_cognito_user_pool_domain" "this" {
-  domain       = "baitersburger-products-app"
+  domain       = "baitersburger-products-application"
   user_pool_id = aws_cognito_user_pool.user_pool_configuration.id
 }
