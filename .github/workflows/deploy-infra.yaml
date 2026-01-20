@@ -36,7 +36,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Upload Lambda code to Amazon S3
-        run: aws s3 cp lambda_authorizer.zip s3://baitersburger-products-infra/lambda-authorizer/
+        run: aws s3 cp lambda_authorizer.zip s3://baitersburger-products-infrastructure/lambda-authorizer/
 
   terraform:
     name: Deploy infrastructure with Terraform

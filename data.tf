@@ -10,5 +10,5 @@ data "aws_subnets" "all_default_subnets" {
 }
 
 data "aws_s3_bucket" "baitersburger-products-s3-bucket" {
-  bucket = "baitersburger-products-infra"
+  bucket = "baitersburger-products-infrastructure"
 }
